@@ -31,6 +31,7 @@
         <div class="email-list__items">
           <div
             v-for="email in emails"
+            @click="emailModalOpen(email)"
             class="email-list__items__item"
             :class="{ 'email-list__items__item--read': email.isRead }"
           >
@@ -40,12 +41,15 @@
         </div>
       </div>
     </main>
+
+    <EmailModal v-model="emailModalValue" v-model:visible="emailModalVisible" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { getEmails } from './emails';
+import { Email, getEmails } from './emails';
+import EmailModal from './components/EmailModal.vue';
 
 const page = ref('inbox');
 
@@ -76,6 +80,15 @@ const emailsIsAllSelected = computed({
     !!emails.value.length && emails.value.every((email) => email.isSelected),
   set: (val) => emails.value.forEach((email) => (email.isSelected = val)),
 });
+
+//
+const emailModalVisible = ref(false);
+const emailModalValue = ref<Email>();
+
+function emailModalOpen(email: any) {
+  emailModalVisible.value = true;
+  emailModalValue.value = email;
+}
 
 //
 function markSelectedRead() {
