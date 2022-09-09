@@ -2,10 +2,10 @@
   <div class="container">
     <aside class="container__aside aside">
       <button class="btn aside__btn" @click="() => (page = 'inbox')">
-        Inbox ()
+        Inbox ({{ emailsInboxCount }})
       </button>
       <button class="btn aside__btn" @click="() => (page = 'archive')">
-        Archive ()
+        Archive ({{ emailsArchivedCount }})
       </button>
 
       <button class="btn aside__btn aside__btn--bottom">Logout</button>
@@ -19,10 +19,21 @@
 
       <div class="email-list">
         <div class="email-list__header">
-          <div><input type="checkbox" /></div>
+          <input type="checkbox" v-model="emailsIsAllSelected" />
+
+          <button class="btn aside__btn" @click="markSelectedRead">
+            Mark as read (r)
+          </button>
+          <button class="btn aside__btn" @click="markSelectedArchive">
+            Archive (a)
+          </button>
         </div>
         <div class="email-list__items">
-          <div v-for="email in emails" class="email-list__items__item">
+          <div
+            v-for="email in emails"
+            class="email-list__items__item"
+            :class="{ 'email-list__items__item--read': email.isRead }"
+          >
             <input type="checkbox" v-model="email.isSelected" />
             <div>{{ email.title }}</div>
           </div>
@@ -38,10 +49,44 @@ import { getEmails } from './emails';
 
 const page = ref('inbox');
 
-const emails = ref(getEmails());
+const emailsList = ref(getEmails());
+const emails = computed(() => {
+  if (page.value == 'inbox')
+    return emailsList.value.filter((email) => !email.isArchived);
+
+  if (page.value == 'archive')
+    return emailsList.value.filter((email) => email.isArchived);
+
+  return [];
+});
+const emailsInboxCount = computed(
+  () => emailsList.value.filter((email) => !email.isArchived).length,
+);
+const emailsArchivedCount = computed(
+  () => emailsList.value.filter((email) => email.isArchived).length,
+);
+
 const emailsSelected = computed(() =>
   emails.value.filter((email) => email.isSelected),
 );
+const emailsIsAllSelected = computed({
+  get: () => emails.value.every((email) => email.isSelected),
+  set: (val) => emails.value.forEach((email) => (email.isSelected = val)),
+});
+
+//
+function markSelectedRead() {
+  emailsSelected.value.forEach((email) => (email.isRead = true));
+  resetSelected();
+}
+function markSelectedArchive() {
+  emailsSelected.value.forEach((email) => (email.isArchived = true));
+  resetSelected();
+}
+
+function resetSelected() {
+  emailsList.value.forEach((email) => (email.isSelected = false));
+}
 </script>
 
 <style lang="scss">
@@ -94,6 +139,15 @@ body {
 .email-list {
   margin-top: 2rem;
 
+  &__header {
+    margin-bottom: 2rem;
+
+    display: flex;
+    align-items: center;
+    padding: 0 1.1rem;
+    gap: 2rem;
+  }
+
   &__items {
     display: flex;
     flex-direction: column;
@@ -111,6 +165,10 @@ body {
       > input {
         margin-right: 1.4rem;
       }
+
+      &--read {
+        opacity: 0.5;
+      }
     }
   }
 }
@@ -126,6 +184,9 @@ body {
   font-weight: 600;
   font-size: 1rem;
   font-family: 'Segoe UI', sans-serif;
+
+  &--compact {
+  }
 }
 input[type='checkbox'] {
   cursor: pointer;
