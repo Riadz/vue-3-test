@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <aside class="container__aside aside">
-      <button class="btn aside__btn" @click="() => (page = 'inbox')">
+      <button class="btn aside__btn" @click="setPage('inbox')">
         Inbox ({{ emailsInboxCount }})
       </button>
-      <button class="btn aside__btn" @click="() => (page = 'archive')">
+      <button class="btn aside__btn" @click="setPage('archive')">
         Archive ({{ emailsArchivedCount }})
       </button>
 
@@ -59,8 +59,18 @@ import { ref, computed, onMounted } from 'vue';
 import { Email, getEmails } from './emails';
 import EmailModal from './components/EmailModal.vue';
 
-const page = ref('inbox');
+// pages, decided not to add vue router,
+// since we only have 2 very similar pages.
+// page is remembered using simple url hash.
+const url = new URL(location.href);
+const page = ref(url.hash.slice(1) || 'inbox');
+function setPage(val: string) {
+  page.value = val;
+  url.hash = val;
+  window.history.pushState(null, '', url.toString());
+}
 
+// emails
 const emailsList = ref(getEmails());
 //
 const emails = computed(() => {
@@ -89,7 +99,7 @@ const emailsIsAllSelected = computed({
   set: (val) => emails.value.forEach((email) => (email.isSelected = val)),
 });
 
-//
+// email modal
 const emailModalVisible = ref(false);
 const emailModalValue = ref<Email>();
 
@@ -98,7 +108,7 @@ function emailModalOpen(email: any) {
   emailModalValue.value = email;
 }
 
-//
+// selected emails
 function markSelectedRead() {
   emailsSelected.value.forEach((email) => (email.isRead = true));
   resetSelected();
