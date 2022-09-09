@@ -1,7 +1,27 @@
 <template>
   <div class="email-modal" :class="{ visible }">
-    <div class="email-modal__content">
-      {{ email }}
+    <div class="email-modal__content" v-if="email">
+      <button class="email-modal__content__close" @click="visible = false">
+        Close (Esc)
+      </button>
+
+      <div class="email-modal__content__header">
+        <button
+          class="btn btn--compact"
+          @click="() => email && (email.isRead = true)"
+        >
+          Mark as read (r)
+        </button>
+        <button
+          class="btn btn--compact"
+          @click="() => email && (email.isArchived = true)"
+        >
+          Archive (a)
+        </button>
+      </div>
+
+      <h2>{{ email.title }}</h2>
+      <p>{{ email.content }}</p>
     </div>
 
     <div class="email-modal__underlay" @click="visible = false"></div>
@@ -52,6 +72,25 @@ const visible = computed({
 
     transform: translateX(100%);
     transition: transform 0.3s ease;
+
+    //
+    padding: 1rem;
+
+    &__close {
+      background-color: transparent;
+      border: none;
+      padding: 0;
+      font-size: 1rem;
+      font-weight: bold;
+      text-decoration: underline;
+      cursor: pointer;
+
+      margin-bottom: 1.5rem;
+    }
+    &__header {
+      display: flex;
+      gap: 1rem;
+    }
   }
 
   &__underlay {
