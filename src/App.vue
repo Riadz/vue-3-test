@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { Email, getEmails } from './emails';
 import EmailModal from './components/EmailModal.vue';
 
@@ -111,6 +111,16 @@ function markSelectedArchive() {
 function resetSelected() {
   emailsList.value.forEach((email) => (email.isSelected = false));
 }
+
+// keyboard events
+onMounted(() =>
+  document.addEventListener('keyup', (e) => {
+    if (emailModalVisible.value) return;
+
+    if (e.key == 'r') markSelectedRead();
+    if (e.key == 'a') markSelectedArchive();
+  }),
+);
 </script>
 
 <style lang="scss">

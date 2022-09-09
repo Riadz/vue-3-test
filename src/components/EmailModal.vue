@@ -1,27 +1,23 @@
 <template>
   <div class="email-modal" :class="{ visible }">
-    <div class="email-modal__content" v-if="email">
+    <div class="email-modal__content">
       <button class="email-modal__content__close" @click="visible = false">
         Close (Esc)
       </button>
 
       <div class="email-modal__content__header">
-        <button
-          class="btn btn--compact"
-          @click="() => email && (email.isRead = true)"
-        >
+        <button class="btn btn--compact" @click="markRead">
           Mark as read (r)
         </button>
-        <button
-          class="btn btn--compact"
-          @click="() => email && (email.isArchived = true)"
-        >
+        <button class="btn btn--compact" @click="markArchive">
           Archive (a)
         </button>
       </div>
 
-      <h2>{{ email.title }}</h2>
-      <p>{{ email.content }}</p>
+      <div v-if="email">
+        <h2>{{ email.title }}</h2>
+        <p>{{ email.content }}</p>
+      </div>
     </div>
 
     <div class="email-modal__underlay" @click="visible = false"></div>
@@ -29,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { Email } from '../emails';
 
 const props = defineProps<{
@@ -47,6 +43,28 @@ const visible = computed({
   get: () => props.visible,
   set: (val) => emit('update:visible', val),
 });
+
+//
+function markRead() {
+  if (!email.value) return;
+  email.value.isRead = true;
+}
+function markArchive() {
+  if (!email.value) return;
+  email.value.isArchived = true;
+}
+
+//
+onMounted(() =>
+  document.addEventListener('keyup', (e) => {
+    if (!visible.value) return;
+
+    if (e.key == 'r') markRead();
+    if (e.key == 'a') markArchive();
+
+    if (e.key == 'Escape') visible.value = false;
+  }),
+);
 </script>
 
 <style lang="scss">
