@@ -21,10 +21,10 @@
         <div class="email-list__header">
           <input type="checkbox" v-model="emailsIsAllSelected" />
 
-          <button class="btn aside__btn" @click="markSelectedRead">
+          <button class="btn btn--compact" @click="markSelectedRead">
             Mark as read (r)
           </button>
-          <button class="btn aside__btn" @click="markSelectedArchive">
+          <button class="btn btn--compact" @click="markSelectedArchive">
             Archive (a)
           </button>
         </div>
@@ -202,6 +202,9 @@ body {
   font-family: 'Segoe UI', sans-serif;
 
   &--compact {
+    font-size: 0.9rem;
+    padding: 0.5rem 1.2rem;
+    border-color: #ececec;
   }
 }
 input[type='checkbox'] {
