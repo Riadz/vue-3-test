@@ -31,12 +31,20 @@
         <div class="email-list__items">
           <div
             v-for="email in emails"
-            @click="emailModalOpen(email)"
             class="email-list__items__item"
             :class="{ 'email-list__items__item--read': email.isRead }"
           >
-            <input type="checkbox" v-model="email.isSelected" />
+            <input
+              v-model="email.isSelected"
+              type="checkbox"
+              class="email-list__items__item__check"
+            />
             <div>{{ email.title }}</div>
+
+            <button
+              class="email-list__items__item__under-btn"
+              @click="emailModalOpen(email)"
+            ></button>
           </div>
         </div>
       </div>
@@ -170,6 +178,7 @@ body {
     gap: 1rem;
 
     &__item {
+      position: relative;
       display: flex;
       align-items: center;
 
@@ -178,8 +187,18 @@ body {
       border-radius: 8px;
       padding: 1rem;
 
-      > input {
+      &__check {
+        z-index: 2;
         margin-right: 1.4rem;
+      }
+      &__under-btn {
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+
+        cursor: pointer;
+        background-color: transparent;
+        border: none;
       }
 
       &--read {
