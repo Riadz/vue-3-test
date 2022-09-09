@@ -1,4 +1,13 @@
-const emails = [
+export interface Email {
+  id: number;
+  title: string;
+  content: string;
+  isSelected: boolean;
+  isRead: boolean;
+  isArchived: boolean;
+}
+
+const emails: Email[] = [
   {
     id: 1,
     title: 'Your 7 figure plan goes',
