@@ -50,6 +50,7 @@ import { getEmails } from './emails';
 const page = ref('inbox');
 
 const emailsList = ref(getEmails());
+//
 const emails = computed(() => {
   if (page.value == 'inbox')
     return emailsList.value.filter((email) => !email.isArchived);
@@ -59,18 +60,20 @@ const emails = computed(() => {
 
   return [];
 });
+//
 const emailsInboxCount = computed(
   () => emailsList.value.filter((email) => !email.isArchived).length,
 );
 const emailsArchivedCount = computed(
   () => emailsList.value.filter((email) => email.isArchived).length,
 );
-
+//
 const emailsSelected = computed(() =>
   emails.value.filter((email) => email.isSelected),
 );
 const emailsIsAllSelected = computed({
-  get: () => emails.value.every((email) => email.isSelected),
+  get: () =>
+    !!emails.value.length && emails.value.every((email) => email.isSelected),
   set: (val) => emails.value.forEach((email) => (email.isSelected = val)),
 });
 
