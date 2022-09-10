@@ -92,6 +92,7 @@ onMounted(() =>
     &__header {
       display: flex;
       gap: 1rem;
+      margin-bottom: 2.5rem;
     }
   }
 
