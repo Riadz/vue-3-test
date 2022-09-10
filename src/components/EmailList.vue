@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { computed, watch } from 'vue';
 import { IEmail } from '@/state/emails';
-import { openEmailModal } from '@/composables/emailModal';
+import { openEmailModal, visible } from '@/composables/emailModal';
+import { useKeyboard } from '@/composables/keyboardEvent';
 
 const props = defineProps<{
   emails: IEmail[];
@@ -34,6 +35,11 @@ function markSelectedArchive() {
 function resetSelected() {
   props.emails.forEach((email) => (email.isSelected = false));
 }
+
+// keyboard events
+let c = computed(() => !visible.value);
+useKeyboard('r', markSelectedRead, c);
+useKeyboard('a', markSelectedArchive, c);
 </script>
 
 <template>
