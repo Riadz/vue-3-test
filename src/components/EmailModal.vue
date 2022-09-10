@@ -5,11 +5,11 @@ import { useKeyboard } from '@/composables/keyboardEvent';
 //
 function markRead() {
   if (!email.value) return;
-  email.value.isRead = true;
+  email.value.isRead = !email.value.isRead;
 }
 function markArchive() {
   if (!email.value) return;
-  email.value.isArchived = true;
+  email.value.isArchived = !email.value.isArchived;
 }
 
 //
@@ -27,10 +27,12 @@ useKeyboard('Escape', () => (visible.value = false), visible);
 
       <div class="email-modal__content__header">
         <button class="btn btn--compact" @click="markRead">
-          Mark as read (r)
+          <template v-if="!email?.isRead">Mark as read (r)</template>
+          <template v-else>Mark as not read (r)</template>
         </button>
         <button class="btn btn--compact" @click="markArchive">
-          Archive (a)
+          <template v-if="!email?.isArchived">Archive (a)</template>
+          <template v-else>Unarchive (a)</template>
         </button>
       </div>
 
