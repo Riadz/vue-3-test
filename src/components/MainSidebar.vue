@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { emailsInboxCount, emailsArchivedCount } from '@/composables/emails';
+import { emailsInboxCount, emailsArchivedCount } from '@/state/emails';
 </script>
 
 <template>
