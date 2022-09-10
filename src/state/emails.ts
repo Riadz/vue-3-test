@@ -1,4 +1,6 @@
-export interface Email {
+import { computed, ref } from 'vue';
+
+export interface IEmail {
   id: number;
   title: string;
   content: string;
@@ -7,7 +9,7 @@ export interface Email {
   isArchived: boolean;
 }
 
-const emails: Email[] = [
+export const emails = ref<IEmail[]>([
   {
     id: 1,
     title: 'Your 7 figure plan goes',
@@ -35,6 +37,12 @@ const emails: Email[] = [
     isRead: false,
     isArchived: false,
   },
-];
+]);
 
-export const getEmails = () => emails;
+//
+export const emailsInboxCount = computed(
+  () => emails.value.filter((email) => !email.isArchived).length,
+);
+export const emailsArchivedCount = computed(
+  () => emails.value.filter((email) => email.isArchived).length,
+);
