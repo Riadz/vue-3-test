@@ -19,17 +19,30 @@ const emailsIsAllSelected = computed({
     !!props.emails.length && props.emails.every((email) => email.isSelected),
   set: (val) => props.emails.forEach((email) => (email.isSelected = val)),
 });
+const emailsSelectedRead = computed(
+  () =>
+    !!emailsSelected.value.length &&
+    emailsSelected.value.every((email) => email.isRead),
+);
+const emailsSelectedArchived = computed(
+  () =>
+    !!emailsSelected.value.length &&
+    emailsSelected.value.every((email) => email.isArchived),
+);
+
 watch(emailsSelected, () =>
   emit('update:selectedCount', emailsSelected.value.length),
 );
 
 // actions
 function markSelectedRead() {
-  emailsSelected.value.forEach((email) => (email.isRead = true));
+  let bool = !emailsSelectedRead.value;
+  emailsSelected.value.forEach((email) => (email.isRead = bool));
   resetSelected();
 }
 function markSelectedArchive() {
-  emailsSelected.value.forEach((email) => (email.isArchived = true));
+  let bool = !emailsSelectedArchived.value;
+  emailsSelected.value.forEach((email) => (email.isArchived = bool));
   resetSelected();
 }
 function resetSelected() {
@@ -48,10 +61,12 @@ useKeyboard('a', markSelectedArchive, c);
       <input type="checkbox" v-model="emailsIsAllSelected" />
 
       <button class="btn btn--compact" @click="markSelectedRead">
-        Mark as read (r)
+        <template v-if="!emailsSelectedRead">Mark as read (r)</template>
+        <template v-else>Mark as not read (r)</template>
       </button>
       <button class="btn btn--compact" @click="markSelectedArchive">
-        Archive (a)
+        <template v-if="!emailsSelectedArchived">Archive (a)</template>
+        <template v-else>Unarchive (a)</template>
       </button>
     </div>
     <div class="email-list__items">
