@@ -2,33 +2,25 @@ body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
 }
+* {
+  box-sizing: border-box;
+}
+a {
+  text-decoration: none;
+}
 
+//
 .container {
   display: flex;
   min-height: 100vh;
 
   &__aside {
-    width: 25%;
+    width: 22%;
     background-color: #373636;
-    padding: 2rem 1.8rem;
   }
   &__main {
-    width: 75%;
+    width: 78%;
     padding: 2rem 5rem;
-  }
-}
-
-.aside {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-
-  &__btn {
-    text-align: start;
-
-    &--bottom {
-      margin-top: auto;
-    }
   }
 }
 
