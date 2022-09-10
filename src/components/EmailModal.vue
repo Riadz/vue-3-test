@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { onMounted } from 'vue';
 import { email, visible } from '@/composables/emailModal';
+import { useKeyboard } from '@/composables/keyboardEvent';
 
 //
 function markRead() {
@@ -13,16 +13,9 @@ function markArchive() {
 }
 
 //
-onMounted(() =>
-  document.addEventListener('keyup', (e) => {
-    if (!visible.value) return;
-
-    if (e.key == 'r') markRead();
-    if (e.key == 'a') markArchive();
-
-    if (e.key == 'Escape') visible.value = false;
-  }),
-);
+useKeyboard('r', markRead, visible);
+useKeyboard('a', markArchive, visible);
+useKeyboard('Escape', () => (visible.value = false), visible);
 </script>
 
 <template>
