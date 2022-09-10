@@ -1,4 +1,4 @@
-import { unref, onMounted, onUnmounted, Ref, ref } from 'vue';
+import { onMounted, onUnmounted, Ref, ref } from 'vue';
 
 export function useKeyboard(
   key: string,
