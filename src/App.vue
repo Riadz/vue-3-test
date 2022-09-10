@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import MainSidebar from '@/components/MainSidebar.vue';
+import EmailModal from './components/EmailModal.vue';
 </script>
 
 <template>
@@ -11,6 +12,8 @@ import MainSidebar from '@/components/MainSidebar.vue';
       <RouterView />
     </main>
   </div>
+
+  <EmailModal />
 </template>
 
 <style lang="scss">

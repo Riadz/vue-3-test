@@ -1,3 +1,30 @@
+<script lang="ts" setup>
+import { onMounted } from 'vue';
+import { email, visible } from '@/composables/emailModal';
+
+//
+function markRead() {
+  if (!email.value) return;
+  email.value.isRead = true;
+}
+function markArchive() {
+  if (!email.value) return;
+  email.value.isArchived = true;
+}
+
+//
+onMounted(() =>
+  document.addEventListener('keyup', (e) => {
+    if (!visible.value) return;
+
+    if (e.key == 'r') markRead();
+    if (e.key == 'a') markArchive();
+
+    if (e.key == 'Escape') visible.value = false;
+  }),
+);
+</script>
+
 <template>
   <div class="email-modal" :class="{ visible }">
     <div class="email-modal__content">
@@ -23,49 +50,6 @@
     <div class="email-modal__underlay" @click="visible = false"></div>
   </div>
 </template>
-
-<script lang="ts" setup>
-import { computed, onMounted } from 'vue';
-import { Email } from '../emails';
-
-const props = defineProps<{
-  modelValue?: Email;
-  visible: boolean;
-}>();
-const emit = defineEmits(['update:modelValue', 'update:visible']);
-
-const email = computed({
-  get: () => props.modelValue,
-  set: (val) => emit('update:modelValue', val),
-});
-
-const visible = computed({
-  get: () => props.visible,
-  set: (val) => emit('update:visible', val),
-});
-
-//
-function markRead() {
-  if (!email.value) return;
-  email.value.isRead = true;
-}
-function markArchive() {
-  if (!email.value) return;
-  email.value.isArchived = true;
-}
-
-//
-onMounted(() =>
-  document.addEventListener('keyup', (e) => {
-    if (!visible.value) return;
-
-    if (e.key == 'r') markRead();
-    if (e.key == 'a') markArchive();
-
-    if (e.key == 'Escape') visible.value = false;
-  }),
-);
-</script>
 
 <style lang="scss">
 .email-modal {
